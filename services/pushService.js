@@ -2,11 +2,21 @@ const webpush = require('web-push');
 const supabase = require('../config/supabase');
 const logger = require('../utils/logger');
 
-webpush.setVapidDetails(
-  process.env.VAPID_EMAIL || 'mailto:support@byteguard.com',
-  process.env.VAPID_PUBLIC_KEY,
-  process.env.VAPID_PRIVATE_KEY
-);
+// Set VAPID details only if keys are available
+if (process.env.VAPID_EMAIL && process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY) {
+  try {
+    webpush.setVapidDetails(
+      process.env.VAPID_EMAIL,
+      process.env.VAPID_PUBLIC_KEY,
+      process.env.VAPID_PRIVATE_KEY
+    );
+    console.log('VAPID details configured');
+  } catch (err) {
+    console.error('Failed to set VAPID details:', err.message);
+  }
+} else {
+  console.warn('VAPID keys not configured — push notifications will not work');
+}
 
 exports.sendPushNotification = async (subscription, payload) => {
   try {
