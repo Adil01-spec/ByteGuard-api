@@ -1,4 +1,9 @@
-const sslChecker = require('ssl-checker');
+let sslChecker;
+try {
+  sslChecker = require('ssl-checker');
+} catch (err) {
+  console.error('Failed to load ssl-checker module:', err.message);
+}
 const axios = require('axios');
 
 /**
@@ -31,6 +36,18 @@ async function scanSsl(hostname) {
   const findings = [];
   const passed = [];
   let sslData = null;
+
+  if (!sslChecker) {
+    findings.push({
+      check: 'SSL Engine',
+      severity: 'high',
+      fixLevel: 'infrastructure',
+      status: 'failed',
+      description: 'SSL scanning engine is currently unavailable in this environment.',
+      recommendation: 'Contact support or check server logs for dependency errors.',
+    });
+    return buildResult(hostname, null, findings, passed);
+  }
 
   // ── 1. Attempt SSL certificate check ──────────────────────────
   try {

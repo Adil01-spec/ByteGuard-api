@@ -48,15 +48,16 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, async () => {
-  console.log(`Server running on port ${PORT}`);
-  // Initialize services if needed
-  try {
-    await require('./services/currencyService').initialize();
-  } catch (err) {
-    console.error('Failed to initialize currency service:', err);
-  }
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, async () => {
+    console.log(`Server running on port ${PORT}`);
+    try {
+      await require('./services/currencyService').initialize();
+    } catch (err) {
+      console.error('Failed to initialize currency service:', err);
+    }
+  });
+}
 
 module.exports = app;
 
