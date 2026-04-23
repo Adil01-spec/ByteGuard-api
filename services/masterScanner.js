@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 const supabase = require('../config/supabase');
 
 const { scanHeaders } = require('./headerScanner');
@@ -97,7 +97,7 @@ async function runFullScan(url, domainId, userId) {
 
   // Save the report to the Supabase scans table
   const insertPayload = {
-    id: uuidv4(),
+    id: randomUUID(),
     domain_id: domainId,
     user_id: userId,
     scanned_url: fullUrl,

@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 const supabase = require('../config/supabase');
 
 const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10;
@@ -38,7 +38,7 @@ exports.register = async (req, res, next) => {
     // Insert user (defaults to free plan, initialize lockout fields)
     const { data: user, error } = await supabase
       .from('users')
-      .insert({ id: uuidv4(), email, password_hash, plan: 'free', failed_attempts: 0, locked_until: null })
+      .insert({ id: randomUUID(), email, password_hash, plan: 'free', failed_attempts: 0, locked_until: null })
       .select('id, email, plan, created_at')
       .single();
 

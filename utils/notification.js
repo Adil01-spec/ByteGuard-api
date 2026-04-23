@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 const supabase = require('../config/supabase');
 
 /**
@@ -12,7 +12,7 @@ async function createNotification(userId, message) {
   const { data, error } = await supabase
     .from('notifications')
     .insert({
-      id: uuidv4(),
+      id: randomUUID(),
       user_id: userId,
       message,
       is_read: false,

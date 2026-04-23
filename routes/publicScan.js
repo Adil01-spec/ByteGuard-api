@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 const supabase = require('../config/supabase');
 const apiKeyMiddleware = require('../middleware/apiKeyMiddleware');
 const masterScanner = require('../services/masterScanner');
@@ -33,7 +33,7 @@ router.post('/scan', apiKeyMiddleware, async (req, res, next) => {
     await supabase
       .from('api_usage_logs')
       .insert({
-        id: uuidv4(),
+        id: randomUUID(),
         api_key_id: apiKeyId,
         user_id: userId,
         scanned_url: url,

@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 const dns = require('dns').promises;
 const axios = require('axios');
 const supabase = require('../config/supabase');
@@ -32,13 +32,13 @@ exports.registerDomain = async (req, res, next) => {
     }
 
     // Generate unique verification token
-    const verificationToken = uuidv4();
+    const verificationToken = randomUUID();
 
     // Insert domain record
     const { data: domainRecord, error } = await supabase
       .from('domains')
       .insert({
-        id: uuidv4(),
+        id: randomUUID(),
         user_id: userId,
         domain,
         is_verified: false,

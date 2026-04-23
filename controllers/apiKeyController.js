@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID } = require('crypto');
 const supabase = require('../config/supabase');
 const { generateApiKey } = require('../services/apiKeyService');
 
@@ -28,7 +28,7 @@ exports.generate = async (req, res, next) => {
     const { data: apiKey, error } = await supabase
       .from('api_keys')
       .insert({
-        id: uuidv4(),
+        id: randomUUID(),
         user_id: userId,
         name: name.trim(),
         key_hash: hash,
